@@ -19,7 +19,7 @@ public class OddEvenFileSplitter implements FileSplitter {
             String line = reader.readLine();
             int i = 0;
             while (line != null) {
-                if (i % 2 == 0) {
+                if (i % 2 == 1) {
                     even.write(line);
                     even.newLine();
                 } else {
