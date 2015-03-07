@@ -13,11 +13,12 @@ public class SizeCalculator implements FileSizeCalculator {
 
     public long getSize(final String pathToDir, final String fileTemplate) {
         Path files = Paths.get(pathToDir);
+        Visitor visitor = new Visitor(fileTemplate);
         try {
-            Files.walkFileTree(files, new Visitor(fileTemplate));
+            Files.walkFileTree(files, visitor);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return Counter.size;
+        return visitor.getSize();
     }
 }

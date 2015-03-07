@@ -13,24 +13,26 @@ import java.nio.file.attribute.BasicFileAttributes;
 public class Visitor implements FileVisitor<Path> {
 
     private String template;
+    private long size;
 
     public Visitor(String template) {
         this.template = template;
+        size = 0;
     }
 
     private boolean matches(final String filename, final String template) {
         int length = template.length() - 1;
         if ((template.charAt(0) == '*') && (template.charAt(length) == '*')) {
-            String substring = template.substring(1, length - 1);
+            String substring = template.substring(1, length);
             return filename.contains(substring);
         } else if (template.charAt(0) == '*') {
             String substring = template.substring(1, length + 1);
             return filename.endsWith(substring);
         } else if (template.charAt(length) == '*') {
-            String substring = template.substring(0, length - 1);
+            String substring = template.substring(0, length);
             return filename.startsWith(substring);
         }
-        return filename.compareTo(template) == 0;
+        return filename.equals(template);
     }
 
     public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
@@ -40,7 +42,7 @@ public class Visitor implements FileVisitor<Path> {
 
     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
         if (matches(file.getFileName().toString(), template)) {
-            Counter.size += Files.size(file);
+            size += Files.size(file);
         }
         return FileVisitResult.CONTINUE;
     }
@@ -53,5 +55,9 @@ public class Visitor implements FileVisitor<Path> {
 
     public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
         return FileVisitResult.CONTINUE;
+    }
+
+    public long getSize() {
+        return size;
     }
 }
