@@ -16,18 +16,17 @@ public class GrepAnalog implements Grep {
 
     private BufferedReader reader;
     private Pattern pattern;
-    private String string;
     private Matcher matcher;
-    private List<String> strings;
 
 
     public GrepAnalog(InputStream stream, String regex) {
         reader = new BufferedReader(new InputStreamReader(stream));
         pattern = Pattern.compile(regex);
-        strings = new ArrayList<String>();
     }
 
     public List<String> findLines(String regex) {
+        String string;
+        List<String> strings = new ArrayList<>();
         try {
             while ((string = reader.readLine()) != null) {
                 matcher = pattern.matcher(string);
@@ -42,6 +41,8 @@ public class GrepAnalog implements Grep {
     }
 
     public List<String> findParts(String regex) {
+        String string;
+        List<String> strings = new ArrayList<>();
         try {
             while ((string = reader.readLine()) != null) {
                 matcher = pattern.matcher(string);
@@ -57,6 +58,8 @@ public class GrepAnalog implements Grep {
     }
 
     public List<String> findInvertMatch(String regex) {
+        String string;
+        List<String> strings = new ArrayList<>();
         try {
             while ((string = reader.readLine()) != null) {
                 matcher = pattern.matcher(string);
