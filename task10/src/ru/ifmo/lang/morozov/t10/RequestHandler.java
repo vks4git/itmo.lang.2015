@@ -83,6 +83,12 @@ class RequestHandler implements HttpHandler {
         int height = image.getHeight();
         double min = 765;
         double max = 0;
+
+        /*
+        Вычисляется разброс цветов в изображении. Чем он больше, тем выше будет порог, при котором два
+        соседних пикселя будут считаться одной частью изображения.
+         */
+
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 Color color = new Color(image.getRGB(i, j));
@@ -97,6 +103,11 @@ class RequestHandler implements HttpHandler {
         }
 
         int threshold = (int) (6 * (max - min) / 765);
+
+        /*
+        Строится система непересекающихся множеств, затем определяются все пиксели, находящиеся в одном
+        множестве с крайними. Предполагается, что объект находится в центре изображения, всё, что вокруг него -- фон.
+         */
 
         DisjointArraysSystem das = new DisjointArraysSystem(width, height);
         for (int i = 0; i < width; i += 2) {
@@ -140,6 +151,9 @@ class RequestHandler implements HttpHandler {
         return image;
     }
 
+    /*
+    Функция определяет, являются ли два пикселя одной частью картинки.
+     */
     private boolean areSimilar(int pixel1, int pixel2, int threshold) {
         Color color1 = new Color(pixel1);
         Color color2 = new Color(pixel2);
